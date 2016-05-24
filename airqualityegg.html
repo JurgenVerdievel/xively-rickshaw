@@ -96,10 +96,10 @@ function drawGraph(data, unit) {
     width: 400,
     height: 400,
     renderer: 'line',
-    /*
-    min: 45,
-    max: 55,
-    /*
+    
+    min: auto,
+    max: auto,
+    
 		min: parseFloat(datastream.min_value) - .25*(parseFloat(datastream.max_value) - parseFloat(datastream.min_value)),
 		max: parseFloat(datastream.max_value) + .25*(parseFloat(datastream.max_value) - parseFloat(datastream.min_value)),
 		*/
@@ -127,7 +127,7 @@ function drawGraph(data, unit) {
     legend: legend
   } );
 
-/*
+
   var axes = new Rickshaw.Graph.Axis.Time( {
     graph: graph
   });
@@ -138,7 +138,7 @@ function drawGraph(data, unit) {
   });
 
   yAxis.render();
-  */
+  
 }
 </script>
 
