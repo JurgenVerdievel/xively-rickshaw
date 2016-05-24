@@ -79,13 +79,14 @@ xively.datastream.history( "396478290", "Scale1", query, loadData);
 
 function loadData(data) {  
   var unit = data.unit.label;
-  var series = [];
+  var series = [{0,10},{1,12},{2,8},{3,9}];
+  /*
   var filtedData = data.datapoints.filter(function(x) { return (x.value < 100000); });
   for (var i=0; i < filtedData.length; i++ ) {
     var date = moment(filtedData[i].at);
     var value = parseFloat(filtedData[i].value);
     series[i] = {x: date.unix(), y: value};
-  }
+  }*/
   drawGraph(series, unit);
 }
 
