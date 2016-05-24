@@ -79,7 +79,7 @@ xively.datastream.history( "396478290", "Scale1", query, loadData);
 
 function loadData(data) {  
   var unit = data.unit.label;
-  var series = [{0,10},{1,12},{2,8},{3,9}];
+  var series = [{x: 0,y: 10},{x: 1,y: 12},{x:2,y:8},{x:3,y:9}];
   /*
   var filtedData = data.datapoints.filter(function(x) { return (x.value < 100000); });
   for (var i=0; i < filtedData.length; i++ ) {
