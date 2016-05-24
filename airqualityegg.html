@@ -92,9 +92,10 @@ function loadData(data) {
 function drawGraph(data, unit) {
   var graph = new Rickshaw.Graph( {
     element: document.querySelector("#chart"),
-    width: 300,
-    height: 300,
+    width: 960,
+    height: 500,
     renderer: 'line',
+    /*
     min: 45,
     max: 55,
     /*
