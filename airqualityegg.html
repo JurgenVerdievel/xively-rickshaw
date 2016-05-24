@@ -83,7 +83,7 @@ function loadData(data) {
   var filtedData = data.datapoints.filter(function(x) { return (x.value < 100000); });
   for (var i=0; i < filtedData.length; i++ ) {
     var date = moment(filtedData[i].at);
-    var value = parseInt(filtedData[i].value);
+    var value = parseFloat(filtedData[i].value);
     series[i] = {x: date.unix(), y: value};
   }
   drawGraph(series, unit);
@@ -95,6 +95,10 @@ function drawGraph(data, unit) {
     width: 300,
     height: 300,
     renderer: 'line',
+    /*
+		min: parseFloat(datastream.min_value) - .25*(parseFloat(datastream.max_value) - parseFloat(datastream.min_value)),
+		max: parseFloat(datastream.max_value) + .25*(parseFloat(datastream.max_value) - parseFloat(datastream.min_value)),
+		*/
     series: [
       {
         data: data,
