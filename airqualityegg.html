@@ -75,61 +75,19 @@ var query = {
   limit: 1000 
 };
 
-var series = [{x: 0,y: 10},{x: 1,y: 12},{x:2,y:8},{x:3,y:9}];
+var data = [ { x: 0, y: 40 }, { x: 1, y: 49 }, { x: 2, y: 17 }, { x: 3, y: 42 } ];
 
   var graph = new Rickshaw.Graph( {
     element: document.querySelector("#chart"),
     width: 400,
     height: 400,
     renderer: 'line',
-    
-    series: [
-      {
-        data: series,
-        color: '#6060c0',
-        name: 'test'
-      }
-    ]
+    series: [ {
+            color: 'steelblue',
+            data: data
+    } ]
   } );
 
-/*
-xively.datastream.history( "396478290", "Scale1", query, loadData);  
-
-function loadData(data) {  
-  var unit = data.unit.label;
-  var series = [{x: 0,y: 10},{x: 1,y: 12},{x:2,y:8},{x:3,y:9}];
-  /*
-  var filtedData = data.datapoints.filter(function(x) { return (x.value < 100000); });
-  for (var i=0; i < filtedData.length; i++ ) {
-    var date = moment(filtedData[i].at);
-    var value = parseFloat(filtedData[i].value);
-    series[i] = {x: date.unix(), y: value};
-  }*/
-  drawGraph(series, unit);
-}
-
-function drawGraph(data, unit) {
-  var graph = new Rickshaw.Graph( {
-    element: document.querySelector("#chart"),
-    width: 400,
-    height: 400,
-    renderer: 'line',
-    
-    min: auto,
-    max: auto,
-    /*
-		min: parseFloat(datastream.min_value) - .25*(parseFloat(datastream.max_value) - parseFloat(datastream.min_value)),
-		max: parseFloat(datastream.max_value) + .25*(parseFloat(datastream.max_value) - parseFloat(datastream.min_value)),
-		*/
-    series: [
-      {
-        data: data,
-        color: '#6060c0',
-        name: unit
-      }
-    ]
-  } );
-  */
   
   
   graph.render();
