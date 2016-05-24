@@ -59,22 +59,6 @@ h2>
 
 <script>
 
-// Set your API key first  
-xively.setKey( "AkDCUKiOhUnUZWDKBhQ7DYuf0MHlmmzK9QCGfenFw0WCFC7B" );  
-
-var startOfYesterday = moment().subtract("day", 1).startOf('day');
-var endOfYesterday = moment().startOf('day');
-
-console.log(startOfYesterday);
-console.log(endOfYesterday);
-
-var query = { 
-  start: startOfYesterday.toJSON(), 
-  end: endOfYesterday.toJSON(), 
-  interval: 60, 
-  limit: 1000 
-};
-
 var data = [ { x: 0, y: 40 }, { x: 1, y: 49 }, { x: 2, y: 17 }, { x: 3, y: 42 } ];
 
   var graph = new Rickshaw.Graph( {
