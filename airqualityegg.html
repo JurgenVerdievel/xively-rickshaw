@@ -130,6 +130,7 @@ function drawGraph(data, unit) {
   
   
   var yAxis = new Rickshaw.Graph.Axis.Y({
+      element: document.getElementById('axis0'),
       graph: graph,
       orientation: 'left',
       scale: scales[0],
