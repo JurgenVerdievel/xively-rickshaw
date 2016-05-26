@@ -29,8 +29,7 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
-          <h1 id="project_title">Battery Voltage<sup>2</sup></h1>
-h2>
+          <h1 id="project_title">Battery Voltage<sup></sup></h1>             //deleted h2
         </header>
     </div>
 
@@ -75,10 +74,10 @@ xively.datastream.history( "1961178354", "Battery1", query, loadData);
 function loadData(data) {  
   var unit = data.unit.label;
   var series = [];
-  var filtedData = data.datapoints.filter(function(x) { return ((x.value < 1000)&& (x.value > 3.8)); });
+  var filtedData = data.datapoints.filter(function(x) { return ((x.value < 1000)&& (x.value > 3.8)); });            //filter werkt
   for (var i=0; i < filtedData.length; i++ ) {
     var date = moment(filtedData[i].at);
-    var value = parseFloat(filtedData[i].value);
+    var value = parseFloat(filtedData[i].value);                              // float werkt
     series[i] = {x: date.unix(), y: value};
   }
   drawGraph(series, unit);
