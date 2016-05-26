@@ -75,10 +75,10 @@ xively.datastream.history( "1961178354", "Battery1", query, loadData);
 function loadData(data) {  
   var unit = data.unit.label;
   var series = [];
-  var filtedData = data.datapoints.filter(function(x) { return (x.value < 1000); });
+  var filtedData = data.datapoints.filter(function(x) { return ((x.value < 1000)&& (x.value > 3.8)); });
   for (var i=0; i < filtedData.length; i++ ) {
     var date = moment(filtedData[i].at);
-    var value = parseInt(filtedData[i].value);
+    var value = parseFloat(filtedData[i].value);
     series[i] = {x: date.unix(), y: value};
   }
   drawGraph(series, unit);
