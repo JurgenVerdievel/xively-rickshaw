@@ -1,168 +1,100 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Xively-rickshaw : Some example time series graphs generated from Xively using Rickshaw" />
+<link type="text/css" rel="stylesheet" href="../src/css/graph.css">
+<link type="text/css" rel="stylesheet" href="css/lines.css">
+<link type="text/css" rel="stylesheet" href="../src/css/detail.css">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-    <link type="text/css" rel="stylesheet" href="css/graph.css">
-    <link type="text/css" rel="stylesheet" href="css/detail.css">
-    <link type="text/css" rel="stylesheet" href="css/legend.css">
-    <link type="text/css" rel="stylesheet" href="css/lines.css">
+<script src="../vendor/d3.v3.js"></script>
+<script src="../rickshaw.js"></script>
 
-    <script src="vendor/d3.min.js"></script>
-    <script src="vendor/d3.layout.min.js"></script>
+<style>
+#chart {
+  position: relative;
+  left: 40px;
+  width: 800px;
+  height: 300px;
+}
+#y_axis {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+}
+#y_axis_2 {
+  position: absolute;
+  top: 0;
+  left: 840px;
+  width: 40px;
+}
+</style>
 
-    <script src="rickshaw.min.js"></script>
-    <script src="vendor/moment.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
-    <script src="http://d23cj0cdvyoxg0.cloudfront.net/xivelyjs-1.0.3.min.js"></script>  
-
-    <title>AirQualityEgg NO2</title>
-  </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <h1 id="project_title">AirQualityEgg NO<sup>2</sup></h1>
-h2>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner" style="height: 480px">
-      <div id="chart_container" >
-          <div id="chart"></div>
-          <div id="legend_container">
-            <div id="smoother" title="Smoothing"></div>
-            <div id="legend"></div>
-          </div>
-          <div id="slider"></div>
-      </div>
-
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Xively-rickshaw maintained by <a href="https://github.com/jasonneylon">jasonneylon</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+<div id="chart_container">
+  <div id="y_axis"></div>
+  <div id="chart"></div>
+  <div id="y_axis_2"></div>
+</div>
 
 <script>
 
-// Set your API key first  
-xively.setKey( "oAFLQCo3Sq24RAureB0XTfdHtGY1lxKDM8oV90urYuZIF77L" );  
-var startOfYesterday = moment().subtract("day", 1).startOf('day');
-var endOfYesterday = moment().startOf('day');
-console.log(startOfYesterday);
-console.log(endOfYesterday);
-var query = { 
-  start: startOfYesterday.toJSON(), 
-  end: endOfYesterday.toJSON(), 
-  interval: 60, 
-  limit: 1000 
-};
-var min, max, len, point, scales;
+var random = new Rickshaw.Fixtures.RandomData(12 * 60 * 60);
 
-scales = [];
+var series = [[]];
 
-
-xively.datastream.history( "1961178354", "Battery1", query, loadData);  
-function loadData(data) {  
-  var unit = data.unit.label;
-  var series = [];
-  min = Number.MAX_VALUE;
-  max = Number.MIN_VALUE;
-  
-  var filtedData = data.datapoints.filter(function(x) { return ((x.value < 1000)&& (x.value > 3.30)); });            //filter werkt
-  for (var i=0; i < filtedData.length; i++ ) {
-    var date = moment(filtedData[i].at);
-    var value = parseFloat(filtedData[i].value);                              // float werkt
-    series[i] = {x: date.unix(), y: value};
-    point = series[i];
-    min = 3; // Math.min(min, point.y);
-    max = 4; // Math.max(max, point.y);
-  }
-  scales.push(d3.scale.linear().domain([min, max]).nice());
-    
-  drawGraph(series, unit);
+for (var i = 0; i < 300; i++) {
+  random.addData(series);
 }
-function drawGraph(data, unit) {
-  var graph = new Rickshaw.Graph( {
-    element: document.querySelector("#chart"),
-    //width: 600,
-    //height: 300,
-    renderer: 'line',
-    min: 3,
-    max: 4,
-    series: [
-      {
-        data: data,
-        color: '#6060c0',
-        name: unit,
-        scale: scales[0]
-      }
-    ]
-  } );
-  graph.render();
-  var hoverDetail = new Rickshaw.Graph.HoverDetail( {
-    graph: graph
-  } );
-  var legend = new Rickshaw.Graph.Legend( {
-    graph: graph,
-    element: document.getElementById('legend')
-  } );
-  var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
-    graph: graph,
-    legend: legend
-  } );
-  var axes = new Rickshaw.Graph.Axis.Time( {
-    graph: graph
-  });
-  axes.render();
-  
-  
-  var yAxis = new Rickshaw.Graph.Axis.Y({
-      element: document.getElementById('axis0'),
-      graph: graph,
-      orientation: 'left',
-      scale: scales[0],
-      tickFormat: Rickshaw.Fixtures.Number.formatKMBT
-  });
-  yAxis.render(); 
+var data = series[0]
+
+var min = Number.MAX_VALUE;
+var max = Number.MIN_VALUE;
+for (i = 0; i < series[0].length; i++) {
+  min = Math.min(min, series[0][i].y);
+  max = Math.max(max, series[0][i].y);
 }
 
-/*
-var data = [ { x: 0, y: 40 }, { x: 1, y: 49 }, { x: 2, y: 17 }, { x: 3, y: 42 } ];
+var logScale = d3.scale.log().domain([min/4, max]);
+var linearScale = d3.scale.linear().domain([min, max]).range(logScale.range());
+var graph = new Rickshaw.Graph( {
+  element: document.getElementById("chart"),
+  renderer: 'line',
+  series: [
+    {
+      color: 'blue',
+      data: JSON.parse(JSON.stringify(data)),
+      name: 'Log View',
+      scale: logScale
+    },
+    {
+      color: 'red',
+      data: JSON.parse(JSON.stringify(data)),
+      name: 'Linear View',
+      scale: linearScale
+    }
+  ]
+} );
 
-  var graph = new Rickshaw.Graph( {
-    element: document.querySelector("#chart"),
-    width: 400,
-    height: 400,
-    renderer: 'line',
-    series: [ {
-            color: 'steelblue',
-            data: data
-    } ]
-  } );
-  
-  graph.render();
+new Rickshaw.Graph.Axis.Y.Scaled( {
+  graph: graph,
+  orientation: 'left',
+  tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+  element: document.getElementById('y_axis'),
+  scale: logScale
+} );
 
-}
-*/
+new Rickshaw.Graph.Axis.Y.Scaled( {
+  graph: graph,
+  orientation: 'right',
+  tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+  element: document.getElementById('y_axis_2'),
+  scale: linearScale,
+  grid: false
+} );
+
+new Rickshaw.Graph.HoverDetail(
+{
+  graph: graph
+} );
+
+graph.render();
 
 </script>
-
-
-</body>
-</body>
-
