@@ -70,6 +70,9 @@ var query = {
   interval: 60, 
   limit: 1000 
 };
+var min_val;
+var max_val;
+
 xively.datastream.history( "1961178354", "Battery1", query, loadData);  
 function loadData(data) {  
   var unit = data.unit.label;
@@ -113,10 +116,11 @@ function drawGraph(data, unit) {
   });
   axes.render();
   
+  /*
   var yAxis = new Rickshaw.Graph.Axis.Y({
       graph: graph
   });
-  yAxis.render();
+  yAxis.render(); */
 }
 </script>
 
