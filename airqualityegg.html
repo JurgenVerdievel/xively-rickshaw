@@ -70,19 +70,29 @@ var query = {
   interval: 60, 
   limit: 1000 
 };
-var min_val;
-var max_val;
+var min, max, len, point, scales;
+
+scales = [];
+
 
 xively.datastream.history( "1961178354", "Battery1", query, loadData);  
 function loadData(data) {  
   var unit = data.unit.label;
   var series = [];
-  var filtedData = data.datapoints.filter(function(x) { return ((x.value < 1000)&& (x.value > 3.8)); });            //filter werkt
+  min = Number.MAX_VALUE;
+  max = Number.MIN_VALUE;
+  
+  var filtedData = data.datapoints.filter(function(x) { return ((x.value < 1000)&& (x.value > 3.30)); });            //filter werkt
   for (var i=0; i < filtedData.length; i++ ) {
     var date = moment(filtedData[i].at);
     var value = parseFloat(filtedData[i].value);                              // float werkt
     series[i] = {x: date.unix(), y: value};
+    point = series[i];
+    min = Math.min(min, point.y);
+    max = Math.max(max, point.y);
   }
+  scales.push(d3.scale.linear().domain([min, max]).nice());
+    
   drawGraph(series, unit);
 }
 function drawGraph(data, unit) {
@@ -95,7 +105,8 @@ function drawGraph(data, unit) {
       {
         data: data,
         color: '#6060c0',
-        name: unit
+        name: unit,
+        scale: scales[0]
       }
     ]
   } );
@@ -118,15 +129,13 @@ function drawGraph(data, unit) {
   
   
   var yAxis = new Rickshaw.Graph.Axis.Y({
-      graph: graph
+      graph: graph,
+      orientation: 'left',
+      scale: scales[0],
+      tickFormat: Rickshaw.Fixtures.Number.formatKMBT
   });
   yAxis.render(); 
 }
-</script>
-
-
-</body>
-</body>
 
 /*
 var data = [ { x: 0, y: 40 }, { x: 1, y: 49 }, { x: 2, y: 17 }, { x: 3, y: 42 } ];
@@ -141,17 +150,15 @@ var data = [ { x: 0, y: 40 }, { x: 1, y: 49 }, { x: 2, y: 17 }, { x: 3, y: 42 } 
             data: data
     } ]
   } );
-
-  
   
   graph.render();
 
-  
 }
+*/
+
 </script>
 
 
 </body>
 </body>
 
-*/
