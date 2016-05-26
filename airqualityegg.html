@@ -89,7 +89,7 @@ function loadData(data) {
     var value = parseFloat(filtedData[i].value);                              // float werkt
     series[i] = {x: date.unix(), y: value};
     point = series[i];
-    min = Math.min(min, point.y);
+    min = 3; // Math.min(min, point.y);
     max = Math.max(max, point.y);
   }
   scales.push(d3.scale.linear().domain([min, max]).nice());
