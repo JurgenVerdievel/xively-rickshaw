@@ -1,100 +1,60 @@
-<!doctype html>
+<!doctype>
+<head>
+	<link type="text/css" rel="stylesheet" href="../rickshaw.css">
+	<script src="../vendor/d3.v3.js"></script>
+	<script src="../rickshaw.js"></script>
+</head>
+<body>
 
-<link type="text/css" rel="stylesheet" href="../src/css/graph.css">
-<link type="text/css" rel="stylesheet" href="css/lines.css">
-<link type="text/css" rel="stylesheet" href="../src/css/detail.css">
+	<div id="chart_container">
+		<div id="chart"></div>
+		<div id="legend_container">
+			<div id="smoother" title="Smoothing"></div>
+			<div id="legend"></div>
+		</div>
+		<div id="slider"></div>
+	</div>
 
-<script src="../vendor/d3.v3.js"></script>
-<script src="../rickshaw.js"></script>
+	<script>
+	// set up our data series with 50 random data points
+	var seriesData = [ [], [], [] ];
+	var random = new Rickshaw.Fixtures.RandomData(0.01);
+	for (var i = 0; i < 150; i++) {
+		random.addData(seriesData);
+	}
+	// instantiate our graph!
+	var graph = new Rickshaw.Graph( {
+		element: document.getElementById("chart"),
+		width: 960,
+		height: 500,
+		renderer: 'line',
+		series: [
+			{
+				color: "#c05020",
+				data: seriesData[0],
+				name: 'New York'
+			}, {
+				color: "#30c020",
+				data: seriesData[1],
+				name: 'London'
+			}, {
+				color: "#6060c0",
+				data: seriesData[2],
+				name: 'Tokyo'
+			}
+		]
+	} );
+	graph.render();
+	var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+		graph: graph
+	} );
+	var axes = new Rickshaw.Graph.Axis.Time( {
+		graph: graph,
+		timeFixture: new Rickshaw.Fixtures.Time.Local()
+	} );
+	axes.render();
+	</script>
 
-<style>
-#chart {
-  position: relative;
-  left: 40px;
-  width: 800px;
-  height: 300px;
-}
-#y_axis {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 40px;
-}
-#y_axis_2 {
-  position: absolute;
-  top: 0;
-  left: 840px;
-  width: 40px;
-}
-</style>
+</body>
 
-<div id="chart_container">
-  <div id="y_axis"></div>
-  <div id="chart"></div>
-  <div id="y_axis_2"></div>
-</div>
 
-<script>
-
-var random = new Rickshaw.Fixtures.RandomData(12 * 60 * 60);
-
-var series = [[]];
-
-for (var i = 0; i < 300; i++) {
-  random.addData(series);
-}
-var data = series[0]
-
-var min = Number.MAX_VALUE;
-var max = Number.MIN_VALUE;
-for (i = 0; i < series[0].length; i++) {
-  min = Math.min(min, series[0][i].y);
-  max = Math.max(max, series[0][i].y);
-}
-
-var logScale = d3.scale.log().domain([min/4, max]);
-var linearScale = d3.scale.linear().domain([min, max]).range(logScale.range());
-var graph = new Rickshaw.Graph( {
-  element: document.getElementById("chart"),
-  renderer: 'line',
-  series: [
-    {
-      color: 'blue',
-      data: JSON.parse(JSON.stringify(data)),
-      name: 'Log View',
-      scale: logScale
-    },
-    {
-      color: 'red',
-      data: JSON.parse(JSON.stringify(data)),
-      name: 'Linear View',
-      scale: linearScale
-    }
-  ]
-} );
-
-new Rickshaw.Graph.Axis.Y.Scaled( {
-  graph: graph,
-  orientation: 'left',
-  tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-  element: document.getElementById('y_axis'),
-  scale: logScale
-} );
-
-new Rickshaw.Graph.Axis.Y.Scaled( {
-  graph: graph,
-  orientation: 'right',
-  tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-  element: document.getElementById('y_axis_2'),
-  scale: linearScale,
-  grid: false
-} );
-
-new Rickshaw.Graph.HoverDetail(
-{
-  graph: graph
-} );
-
-graph.render();
-
-</script>
