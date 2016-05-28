@@ -82,7 +82,22 @@ function loadData(data) {
   }
   drawGraph(series, unit);
 }
-function drawGraph(data, unit) {
+function drawGraph(data, unit) { 
+var graph = new Rickshaw.Graph( {
+    element: document.querySelector("#chart"), 
+    width: 300, 
+    height: 200, 
+    series: [{
+        color: 'steelblue',
+        data: [ 
+            { x: 0, y: 40 }, 
+            { x: 1, y: 49 }, 
+            { x: 2, y: 38 }, 
+            { x: 3, y: 30 }, 
+            { x: 4, y: 32 } ]
+    }]
+});
+ /*
   var graph = new Rickshaw.Graph( {
     element: document.querySelector("#chart"),
     width: 640,
@@ -96,6 +111,7 @@ function drawGraph(data, unit) {
       }
     ]
   } );
+  */
   graph.render();
   var hoverDetail = new Rickshaw.Graph.HoverDetail( {
     graph: graph
